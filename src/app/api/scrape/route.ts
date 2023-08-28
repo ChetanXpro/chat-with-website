@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
 
     const embeddings = new OpenAIEmbeddings({
       maxConcurrency: 2,
+      openAIApiKey: process.env.OPENAI_API_KEY,
     });
 
     const pine = await pinecone;
