@@ -6,8 +6,10 @@ import { Input } from "./ui/input";
 
 import { useToast } from "./ui/use-toast";
 import { isURLValid } from "@/utils/isURLValid";
+import Loader from "./Loader";
 
 const ScrapePage = () => {
+  const [isLoading, setIsLoading] = React.useState(false);
   const [url, setUrl] = React.useState("");
   const { toast } = useToast();
 
@@ -23,12 +25,33 @@ const ScrapePage = () => {
         });
         return;
       }
+
+      setIsLoading(true);
+
+      const response = await fetch("/api/scrape", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url,
+        }),
+      });
+      const data = await response.json();
+      console.log("data", data);
+
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) return <Loader />;
   return (
-    <div>
+    <div className=" flex w-[50%] ml-10 gap-4">
       <Input onChange={(e) => setUrl(e.target.value)} />
       <Button onClick={() => scrapeUrl(url)}>Scrape</Button>
     </div>

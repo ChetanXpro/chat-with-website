@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { question } = body;
+    const { question, history } = body;
 
     if (!question) {
       return new Response("No question asked", { status: 500 });
@@ -38,31 +38,12 @@ export async function POST(request: NextRequest) {
       }
     );
 
-    // const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
-    //   pineconeIndex: index,
-    // });
-
-    // const chain = VectorDBQAChain.fromLLM(model, vectorStore, {
-    //   k: 1,
-    //   returnSourceDocuments: true,
-    // });
     const chain = makeChain(vectorStore);
-    // console.log("chain", chain);
 
-    //Ask a question using chat history
     const response = await chain.call({
       question: sanitizedQuestion,
-      chat_history: [],
+      chat_history: history || [],
     });
-
-    // Call our chain with the prompt given by the user
-    console.log("sanitizedQuestion", sanitizedQuestion);
-
-    // const response = await chain
-    //   .call({ query: sanitizedQuestion })
-    //   .catch(console.error);
-
-    console.log("response", response);
 
     return NextResponse.json({ response }, { status: 200 });
   } catch (error: any) {
