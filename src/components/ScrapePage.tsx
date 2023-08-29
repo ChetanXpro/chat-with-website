@@ -51,9 +51,15 @@ const ScrapePage = () => {
 
   if (isLoading) return <Loader />;
   return (
-    <div className=" flex w-[50%] ml-10 gap-4">
-      <Input onChange={(e) => setUrl(e.target.value)} />
-      <Button onClick={() => scrapeUrl(url)}>Scrape</Button>
+    <div className=" flex w-[50%] gap-4">
+      <Input
+        className="rounded-xl"
+        placeholder="Enter website url"
+        onChange={(e) => setUrl(e.target.value)}
+      />
+      <Button className="bg-blue-400 rounded-xl" onClick={() => scrapeUrl(url)}>
+        Scrape
+      </Button>
     </div>
   );
 };
